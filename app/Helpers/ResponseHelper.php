@@ -10,7 +10,7 @@ class ResponseHelper
 
     private int $code = 200;
     private ?string $message;
-    private array $data = [];
+    private ?array $data = null;
     private bool $success = true;
 
     public static function instance()
@@ -18,7 +18,7 @@ class ResponseHelper
         return new ResponseHelper;
     }
 
-    public static function success(int $code, array $data, string $message = null)
+    public static function success(int $code, array $data = null, string $message = null)
     {
         return self::instance()
             ->setCode($code)
@@ -28,7 +28,7 @@ class ResponseHelper
             ->json();
     }
 
-    public static function fail(int $code, array $data, string $message = null)
+    public static function fail(int $code, array $data = null, string $message = null)
     {
         return self::instance()
             ->setCode($code)
@@ -79,7 +79,7 @@ class ResponseHelper
         if ($this->message !== null)
             $response['message'] = $this->message;
 
-        if (count($this->data) > 0)
+        if ($this->data !== null)
             $response['data'] = $this->data;
 
         $response['success'] = $this->success;

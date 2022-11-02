@@ -1,6 +1,6 @@
 <?php
 
 return [
-    '404' => 'The Requested Resource Is Not Found',
-    '500' => 'Internal Server Error',
+    '404' => 'The requested resource is not found',
+    '500' => 'Internal server error',
 ];

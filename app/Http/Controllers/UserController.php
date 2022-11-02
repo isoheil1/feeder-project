@@ -23,17 +23,16 @@ class UserController extends Controller
 
     /**
      * Login user
-     * 
+     *
      * @param \App\Http\Requests\LoginUserRequest $request
-     * @return \Illuminate\Http\JsonResponse 
+     * @return \Illuminate\Http\JsonResponse
      */
     public function login(LoginUserRequest $request): JsonResponse
     {
         if (\Auth::attempt($request->only(['email', 'password'])) == false) {
             return ResponseHelper::fail(
-                Response::HTTP_UNAUTHORIZED,
-                [],
-                trans('auth.failed')
+                code: Response::HTTP_UNAUTHORIZED,
+                message: trans('auth.failed')
             );
         }
 
@@ -48,9 +47,9 @@ class UserController extends Controller
 
     /**
      * Register user via email and password
-     * 
+     *
      * @param \App\Http\Requests\RegisterUserRequest $request
-     * @return \Illuminate\Http\JsonResponse 
+     * @return \Illuminate\Http\JsonResponse
      */
     public function register(RegisterUserRequest $request): JsonResponse
     {

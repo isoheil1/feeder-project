@@ -36,15 +36,15 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreProductRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request): JsonResponse
     {
         $product = $this->repository->create($request->validated());
 
         return $product ?
-            ResponseHelper::success(Response::HTTP_CREATED, $product->toArray()) :
-            ResponseHelper::fail(Response::HTTP_INTERNAL_SERVER_ERROR, [], trans('errors.500'));
+            ResponseHelper::success(Response::HTTP_OK, $product->toArray()) :
+            ResponseHelper::fail(code: Response::HTTP_INTERNAL_SERVER_ERROR, message: trans('errors.500'));
     }
 
     /**
@@ -65,23 +65,23 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
         return $this->repository->update($product, $request->validated()) ?
             ResponseHelper::success(Response::HTTP_OK, $product->toArray()) :
-            ResponseHelper::fail(Response::HTTP_INTERNAL_SERVER_ERROR, [], trans('errors.500'));
+            ResponseHelper::fail(code: Response::HTTP_INTERNAL_SERVER_ERROR, message: trans('errors.500'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product): JsonResponse
     {
         return $this->repository->delete($product) ?
-            response('', Response::HTTP_NO_CONTENT) :
-            ResponseHelper::fail(Response::HTTP_INTERNAL_SERVER_ERROR, [], trans('errors.500'));
+            response()->json([], Response::HTTP_NO_CONTENT) :
+            ResponseHelper::fail(code: Response::HTTP_INTERNAL_SERVER_ERROR, message: trans('errors.500'));
     }
 }
