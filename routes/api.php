@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FeedController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('auth')->group(__DIR__ . '/auth.php');
-
 Route::apiResource('product', ProductController::class);
+Route::get('feed/export/{type?}', [FeedController::class, 'export']);

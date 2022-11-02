@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('image_link');
             $table->enum('availability', ['in_stock', 'out_of_stock', 'preorder', 'backorder'])->default('in_stock');
             $table->date('availability_date');
+            $table->enum('condition', ['new', 'refurbished', 'used'])->default('new');
+            $table->string('brand');
             $table->float('price');
             $table->float('sale_price')->nullable();
             $table->timestamps();
