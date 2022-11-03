@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Str;
 
 class ProductFactory extends Factory
 {
@@ -20,7 +21,7 @@ class ProductFactory extends Factory
         return [
             'title' => fake()->text(20),
             'description' => fake()->text(),
-            'sku' => fake()->words(10, true),
+            'sku' => Str::upper(Str::random(10)),
             'image_link' => 'https://localhost/images/fake.png',
             'availability' => $availability[array_rand($availability)],
             'condition' => $condition[array_rand($condition)],

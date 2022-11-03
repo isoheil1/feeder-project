@@ -53,13 +53,13 @@ class ResponseHelper
         return $this;
     }
 
-    public function setMessage($message)
+    public function setMessage(?string $message)
     {
         $this->message = $message;
         return $this;
     }
 
-    public function setData(array $data)
+    public function setData(?array $data)
     {
         $this->data = $data;
         return $this;

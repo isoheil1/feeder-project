@@ -21,6 +21,8 @@ class UpdateProductRequest extends FormRequest
             'image_link' => 'url',
             'availability' => [new Enum(ProductAvailability::class)],
             'availability_date' => 'date',
+            'condition' => [new Enum(ProductCondition::class)],
+            'brand' => 'string',
             'price' => 'numeric',
             'sale_price' => 'numeric',
         ];

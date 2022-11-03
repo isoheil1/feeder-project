@@ -6,6 +6,8 @@ use App\Contracts\ProductRepositoryInterface;
 use App\Helpers\ResponseHelper;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\ProductCollection;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -25,25 +27,25 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \App\Http\Resources\ProductCollection
      */
-    public function index()
+    public function index(): ProductCollection
     {
-        return ResponseHelper::success(Response::HTTP_OK, $this->repository->all());
+        return new ProductCollection($this->repository->paginate());
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreProductRequest  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|\App\Http\Resources\ProductResource
      */
-    public function store(StoreProductRequest $request): JsonResponse
+    public function store(StoreProductRequest $request): JsonResponse|ProductResource
     {
         $product = $this->repository->create($request->validated());
 
         return $product ?
-            ResponseHelper::success(Response::HTTP_OK, $product->toArray()) :
+            new ProductResource($product) :
             ResponseHelper::fail(code: Response::HTTP_INTERNAL_SERVER_ERROR, message: trans('errors.500'));
     }
 
@@ -51,11 +53,11 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\JsonResponse
+     * @return \App\Http\Resources\ProductResource
      */
-    public function show(Product $product): JsonResponse
+    public function show(Product $product): ProductResource
     {
-        return ResponseHelper::success(Response::HTTP_OK, $this->repository->show($product));
+        return new ProductResource($product);
     }
 
     /**
@@ -63,12 +65,12 @@ class ProductController extends Controller
      *
      * @param  \App\Http\Requests\UpdateProductRequest  $request
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|\App\Http\Resources\ProductResource
      */
-    public function update(UpdateProductRequest $request, Product $product): JsonResponse
+    public function update(UpdateProductRequest $request, Product $product): JsonResponse|ProductResource
     {
         return $this->repository->update($product, $request->validated()) ?
-            ResponseHelper::success(Response::HTTP_OK, $product->toArray()) :
+            new ProductResource($product) :
             ResponseHelper::fail(code: Response::HTTP_INTERNAL_SERVER_ERROR, message: trans('errors.500'));
     }
 

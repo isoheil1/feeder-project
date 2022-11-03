@@ -10,9 +10,17 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * Get all products
      */
-    public function all(): array
+    public function all()
     {
-        return Product::all()->toArray();
+        return Product::all();
+    }
+
+    /**
+     * Get product pagination
+     */
+    public function paginate()
+    {
+        return Product::paginate(20);
     }
 
     /**
@@ -25,19 +33,6 @@ class ProductRepository implements ProductRepositoryInterface
     {
         return Product::create($data);
     }
-
-    /**
-     * Get product
-     * 
-     * @param \App\Models\Product $product
-     * @param array $data
-     * @return mixed
-     */
-    public function show(Product $product)
-    {
-        return $product->toArray();
-    }
-
 
     /**
      * Update product 
