@@ -1,31 +1,39 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Feeder;
 
 use App\Contracts\FeedBuilder;
-use App\Contracts\FeedFormatter;
-use Illuminate\Database\Eloquent\Collection;
+use App\Services\Feeder\Formatters\FeedFormatterBase;
 
-class ProductFeedBuilder
+class ProductFeeder
 {
 
-    private FeedFormatter $formatter;
+    private FeedFormatterBase $formatter;
     private FeedBuilder $builder;
-    private Collection $products;
+    private array $products;
 
-    public function __construct(FeedBuilder $builder, FeedFormatter $formatter)
+    public function __construct(FeedBuilder $builder, FeedFormatterBase $formatter)
     {
         $this->builder = $builder;
         $this->formatter = $formatter;
     }
 
-    public function setProducts(Collection $products)
+    /**
+     * Set products list
+     * 
+     * @param array $products
+     */
+    public function setProducts(array $products): void
     {
         $this->products = $products;
     }
 
+    /**
+     * Build feeder
+     */
     public function build()
     {
-        // $items = $this->formatter->format($products);
+        $items = $this->formatter->format($this->products);
+        dd($items);
     }
 }

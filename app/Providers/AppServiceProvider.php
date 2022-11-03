@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Contracts\FeedBuilder;
+use App\Services\Feed\JsonFeedBuilder;
+use App\Services\Feed\XMLFeedBuilder;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // $this->app->bind(FeedBuilder::class, JsonFeedBuilder::class);
+        // $this->app->bind(FeedBuilder::class, XMLFeedBuilder::class);
     }
 
     /**

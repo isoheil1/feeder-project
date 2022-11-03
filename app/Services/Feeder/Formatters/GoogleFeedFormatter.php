@@ -2,11 +2,22 @@
 
 namespace App\Services\Feeder\Formatters;
 
-use App\Contracts\FeedFormatter;
+use App\Services\Feeder\Formatters\FeedFormatterBase;
 
-class GoogleFeedFormatter implements FeedFormatter
+class GoogleFeedFormatter extends FeedFormatterBase
 {
-    public function format(array $items)
-    {
-    }
+    protected array $required = [
+        'title',
+        'description',
+        'sku',
+        'image_link',
+    ];
+
+    protected array $optional = [
+        'brand',
+    ];
+
+    protected array $change = [
+        'description' => 'details'
+    ];
 }

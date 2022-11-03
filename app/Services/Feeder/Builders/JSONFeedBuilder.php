@@ -2,6 +2,15 @@
 
 namespace App\Services\Feeder\Builders;
 
-class JSONFeedBuilder
+use App\Contracts\FeedBuilder;
+
+class JSONFeedBuilder implements FeedBuilder
 {
+    public function setItems(array $items)
+    {
+    }
+
+    public function build()
+    {
+    }
 }

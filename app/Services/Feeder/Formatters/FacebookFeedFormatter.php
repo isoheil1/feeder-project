@@ -2,9 +2,9 @@
 
 namespace App\Services\Feeder\Formatters;
 
-use App\Contracts\FeedFormatter;
+use App\Services\Feeder\Formatters\FeedFormatterBase;
 
-class FacebookFeedFormatter implements FeedFormatter
+class FacebookFeedFormatter extends FeedFormatterBase
 {
     public function format(array $items)
     {

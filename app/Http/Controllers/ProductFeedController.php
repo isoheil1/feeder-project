@@ -2,20 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\FeedBuilder;
-use App\Contracts\FeedFormatter;
 use App\Enums\FeedFormats;
 use App\Enums\FeedMerchants;
-use App\Helpers\ResponseHelper;
-use App\Models\Product;
-use App\Services\Feed\XMLFeedBuilder;
-use App\Services\Feeder\Builders\JSONFeedBuilder;
-use App\Services\Feeder\Formatters\FacebookFeedFormatter;
-use App\Services\Feeder\Formatters\GoogleFeedFormatter;
 use Illuminate\Http\Response;
+use App\Helpers\ResponseHelper;
+use App\Contracts\FeedBuilder;
+use App\Contracts\ProductRepositoryInterface;
+use App\Services\Feeder\Builders\JSONFeedBuilder;
+use App\Services\Feeder\Builders\XMLFeedBuilder;
+use App\Services\Feeder\Formatters\FacebookFeedFormatter;
+use App\Services\Feeder\Formatters\FeedFormatterBase;
+use App\Services\Feeder\Formatters\GoogleFeedFormatter;
+use App\Services\Feeder\ProductFeeder;
 
 class ProductFeedController extends Controller
 {
+
+    private $repository;
+
+    public function __construct(ProductRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
 
     /**
      * Export product feed 
@@ -26,23 +35,25 @@ class ProductFeedController extends Controller
             return ResponseHelper::fail(code: Response::HTTP_BAD_REQUEST, message: trans('errors.400'));
         }
 
-        dd('Hello');
-
-        $formatter = $this->parseFormatter($merchant);
-        $builder = $this->parseBuilder($fileFormat);
+        $productFeeder = new ProductFeeder(
+            $this->parseBuilder($fileFormat),
+            $this->parseFormatter($merchant)
+        );
+        $productFeeder->setProducts($this->repository->paginate(10)->getCollection()->toArray());
+        $feed = $productFeeder->build();
     }
 
     /**
      * Parse feed formatter 
      * 
      * @param string $merchant
-     * @return App\Contracts\FeedFormatter
+     * @return App\Services\Feeder\Formatters\FeedFormatterBase
      */
-    private function parseFormatter(string $merchant): FeedFormatter
+    private function parseFormatter(string $merchant): FeedFormatterBase
     {
         return match ($merchant) {
-            FeedMerchants::Google => new GoogleFeedFormatter,
-            FeedMerchants::Facebook => new FacebookFeedFormatter,
+            FeedMerchants::Google->value => new GoogleFeedFormatter,
+            FeedMerchants::Facebook->value => new FacebookFeedFormatter,
         };
     }
 
@@ -55,8 +66,8 @@ class ProductFeedController extends Controller
     private function parseBuilder(string $fileFormat): FeedBuilder
     {
         return match ($fileFormat) {
-            FeedFormats::JSON => new JSONFeedBuilder,
-            FeedFormats::XML => new XMLFeedBuilder
+            FeedFormats::JSON->value => new JSONFeedBuilder,
+            FeedFormats::XML->value => new XMLFeedBuilder
         };
     }
 
