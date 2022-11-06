@@ -6,7 +6,6 @@
 - Clone the repository
 ```
 git clone https://github.com/isoheil1/feeder-project
-cd feeder-project
 ```
 - Switch to the repository folder
 ```
