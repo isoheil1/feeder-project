@@ -2,4 +2,32 @@
 
 ## How To Run Project
 
-You don't need to run project :)
+- Install [Docker](https://docs.docker.com/get-docker/)
+- Clone the repository
+```
+git clone https://github.com/isoheil1/feeder-project
+cd feeder-project
+```
+- Switch to the repository folder
+```
+cd feeder-project
+```
+- Start your development containers
+```
+docker-compose up -d
+```
+- Install dependencies
+```
+docker-compose exec feeder_app composer install
+```
+- Copy the example env file
+```
+cp .env.example .env
+```
+- Run the database migrations and seeders
+```
+docker-compose exec feeder_app php artisan migrate
+docker-compose exec feeder_app php artisan db:seed
+```
+
+You can now access the server at http://localhost:8000/
