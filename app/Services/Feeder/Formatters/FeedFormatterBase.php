@@ -22,6 +22,13 @@ abstract class FeedFormatterBase
     protected array $optional;
 
     /**
+     * The list of keys which need to rename
+     *
+     * @var array
+     */
+    protected array $rename;
+
+    /**
      * The list of formatted items
      *
      * @var array
@@ -36,17 +43,25 @@ abstract class FeedFormatterBase
     public $items;
 
 
+    /**
+     * Format Keys
+     *
+     * @param array $items
+     * @return array
+     */
     public function format(array $items)
     {
         $this->items = $items;
 
         self::checkRequiredItems();
         self::fiterItems();
+
+        return $this->formattedItems;
     }
 
     /**
-     * Check needed keys 
-     * 
+     * Check needed keys
+     *
      * @throws \App\Exceptions\Feeder\ValidationException
      */
     private function checkRequiredItems(): void
@@ -63,7 +78,34 @@ abstract class FeedFormatterBase
     /**
      * Filter and rename keys
      */
-    private function fiterItems()
+    private function fiterItems(): void
     {
+        $allKeys = array_merge($this->required, $this->optional);
+
+        foreach ($this->items as $item) {
+
+            $formatted_item = array();
+
+            foreach ($item as $key => $value) {
+                if (in_array($key, $allKeys)) {
+                    $key = $this->needToRename($key) ? $this->rename[$key] : $key;
+                    $formatted_item[$key] = $value;
+                }
+            }
+
+            $this->formattedItems[] = $formatted_item;
+        }
+    }
+
+
+    /**
+     * Determine if the given key need to rename
+     *
+     * @param string $key
+     * @return bool
+     */
+    private function needToRename($key): bool
+    {
+        return array_key_exists($key, $this->rename);
     }
 }

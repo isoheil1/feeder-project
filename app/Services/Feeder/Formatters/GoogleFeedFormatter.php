@@ -17,7 +17,7 @@ class GoogleFeedFormatter extends FeedFormatterBase
         'brand',
     ];
 
-    protected array $change = [
+    protected array $rename = [
         'description' => 'details'
     ];
 }

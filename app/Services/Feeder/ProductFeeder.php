@@ -20,7 +20,7 @@ class ProductFeeder
 
     /**
      * Set products list
-     * 
+     *
      * @param array $products
      */
     public function setProducts(array $products): void
@@ -34,6 +34,8 @@ class ProductFeeder
     public function build()
     {
         $items = $this->formatter->format($this->products);
-        dd($items);
+        $this->builder->setItems($items);
+
+        return $this->builder->build();
     }
 }
