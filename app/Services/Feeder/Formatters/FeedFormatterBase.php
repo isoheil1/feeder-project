@@ -87,7 +87,7 @@ abstract class FeedFormatterBase
             $formatted_item = array();
 
             foreach ($item as $key => $value) {
-                if (in_array($key, $allKeys)) {
+                if (in_array($key, $allKeys) && $value !== null) {
                     $key = $this->needToRename($key) ? $this->rename[$key] : $key;
                     $formatted_item[$key] = $value;
                 }

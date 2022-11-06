@@ -24,9 +24,6 @@ class XMLFeedBuilder implements FeedBuilder
     public function build(): mixed
     {
         $xml = simplexml_load_string('<?xml version="1.0"?><rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel></channel></rss>');
-        $xml->channel->addChild("title", "This is title");
-        $xml->channel->addChild("link", "This is link");
-        $xml->channel->addChild("description", "This is description");
 
         foreach ($this->items as $item) {
 

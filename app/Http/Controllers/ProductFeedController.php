@@ -8,14 +8,18 @@ use Illuminate\Http\Response;
 use App\Helpers\ResponseHelper;
 use App\Contracts\FeedBuilder;
 use App\Contracts\ProductRepositoryInterface;
+use App\Models\Product;
 use App\Services\Feeder\Formatters\FeedFormatterBase;
 use App\Services\Feeder\ProductFeeder;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ProductFeedController extends Controller
 {
 
     private $repository;
 
+    private const PER_PAGE = 12;
 
     public function __construct(ProductRepositoryInterface $repository)
     {
@@ -28,23 +32,60 @@ class ProductFeedController extends Controller
      * @param string $merchant
      * @param string $fileFormat
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
-    public function export(string $merchant, string $fileFormat): Response
+    public function export(Request $request, string $merchant, string $fileFormat): Response|JsonResponse
     {
         if ($this->validateRequest($merchant, $fileFormat) == false) {
             return ResponseHelper::fail(code: Response::HTTP_BAD_REQUEST, message: trans('errors.400'));
         }
+
+        if ($request->has('page') == false)
+            return $this->showPages($merchant, $fileFormat);
 
         $builder = $this->parseBuilder($fileFormat);
         $formatter  = $this->parseFormatter($merchant);
 
         $productFeeder = new ProductFeeder($builder, $formatter);
 
-        $productFeeder->setProducts($this->repository->paginate(10)->getCollection()->toArray());
+        $productFeeder->setProducts($this->repository->paginate(self::PER_PAGE)->getCollection()->toArray());
         $feed = $productFeeder->build();
 
         return response($feed, Response::HTTP_OK, ['Content-Type' => $builder->getContentType()]);
+    }
+
+    /**
+     * Show feed pages
+     * 
+     * @param string $merchant
+     * @param string $fileFormat
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    private function showPages(string $merchant, string $fileFormat): JsonResponse
+    {
+        $productsCount = $this->repository->count();
+        $pagesCount = ceil($productsCount / self::PER_PAGE);
+
+        $data = [
+            'pages' => [],
+            'merchant' => $merchant,
+            'fileFormat' => $fileFormat,
+            'perPage' => self::PER_PAGE,
+            'total' => $productsCount
+        ];
+
+        if ($pagesCount > 0) {
+            foreach (range(1, $pagesCount) as $page) {
+                $data['pages'][] = route('feeds.export', [
+                    'page' => $page,
+                    'merchant' => $merchant,
+                    'fileFormat' => $fileFormat
+                ]);
+            }
+        }
+
+        return ResponseHelper::success(Response::HTTP_OK, $data);
     }
 
     /**

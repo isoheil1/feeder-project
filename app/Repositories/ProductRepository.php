@@ -17,10 +17,21 @@ class ProductRepository implements ProductRepositoryInterface
 
     /**
      * Get product pagination
+     * @param int $perPage
      */
-    public function paginate()
+    public function paginate(int $perPage)
     {
-        return Product::paginate(20);
+        return Product::paginate($perPage);
+    }
+
+    /**
+     * Get Product count
+     * 
+     * @return int 
+     */
+    public function count(): int
+    {
+        return Product::count();
     }
 
     /**

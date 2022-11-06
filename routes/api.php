@@ -16,5 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('auth')->group(__DIR__ . '/auth.php');
-Route::apiResource('product', ProductController::class, ['as' => 'product']);
+Route::apiResource('product', ProductController::class);
 Route::get('feed/export/{merchant}/{fileFormat}', [ProductFeedController::class, 'export'])->name('feeds.export');

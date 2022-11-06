@@ -31,7 +31,7 @@ class ProductController extends Controller
      */
     public function index(): ProductCollection
     {
-        return new ProductCollection($this->repository->paginate());
+        return new ProductCollection($this->repository->paginate(10));
     }
 
     /**

@@ -6,8 +6,24 @@ use App\Services\Feeder\Formatters\FeedFormatterBase;
 
 class FacebookFeedFormatter extends FeedFormatterBase
 {
-    public function format(array $items)
-    {
-        //
-    }
+    protected array $required = [
+        'id',
+        'title',
+        'description',
+        'sku',
+        'condition',
+        'image_link',
+        'availability',
+        'availability_date',
+        'price',
+    ];
+
+    protected array $optional = [
+        'brand',
+        'sale_price'
+    ];
+
+    protected array $rename = [
+        'description' => 'details'
+    ];
 }
