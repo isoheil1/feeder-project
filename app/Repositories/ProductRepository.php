@@ -26,8 +26,8 @@ class ProductRepository implements ProductRepositoryInterface
 
     /**
      * Get Product count
-     * 
-     * @return int 
+     *
+     * @return int
      */
     public function count(): int
     {
@@ -36,7 +36,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     /**
      * Create new product
-     * 
+     *
      * @param array $data
      * @return mixed
      */
@@ -46,8 +46,8 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /**
-     * Update product 
-     * 
+     * Update product
+     *
      * @param \App\Models\Product $product
      * @return mixed
      */
@@ -58,7 +58,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     /**
      * Delete Product
-     * 
+     *
      * @param \App\Models\Product $product
      * @return mixed
      */

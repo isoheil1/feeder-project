@@ -11,6 +11,7 @@ use App\Contracts\ProductRepositoryInterface;
 use App\Models\Product;
 use App\Services\Feeder\Formatters\FeedFormatterBase;
 use App\Services\Feeder\ProductFeeder;
+use Cache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -48,7 +49,12 @@ class ProductFeedController extends Controller
 
         $productFeeder = new ProductFeeder($builder, $formatter);
 
-        $productFeeder->setProducts($this->repository->paginate(self::PER_PAGE)->getCollection()->toArray());
+        // load products from cache
+        $products = Cache::tags(['products'])->rememberForever('product-feed-' . $request->input('page'), function () {
+            return $this->repository->paginate(self::PER_PAGE)->getCollection()->toArray();
+        });
+
+        $productFeeder->setProducts($products);
         $feed = $productFeeder->build();
 
         return response($feed, Response::HTTP_OK, ['Content-Type' => $builder->getContentType()]);
@@ -56,10 +62,10 @@ class ProductFeedController extends Controller
 
     /**
      * Show feed pages
-     * 
+     *
      * @param string $merchant
      * @param string $fileFormat
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     private function showPages(string $merchant, string $fileFormat): JsonResponse
