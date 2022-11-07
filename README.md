@@ -2,28 +2,45 @@
 
 ## How To Run Project
 
-- Install [Docker](https://docs.docker.com/get-docker/)
-- Clone the repository
+-   Install [Docker](https://docs.docker.com/get-docker/)
+-   Clone the repository
+
 ```
 git clone https://github.com/isoheil1/feeder-project
 ```
-- Switch to the repository folder
+
+-   Switch to the repository folder
+
 ```
 cd feeder-project
 ```
-- Start your development containers
+
+-   Start your development containers
+
 ```
 docker-compose up -d
 ```
-- Install dependencies
+
+-   Install dependencies
+
 ```
 docker-compose exec feeder_app composer install
 ```
-- Copy the example env file
+
+-   Copy the example env file
+
 ```
 cp .env.example .env
 ```
-- Run the database migrations and seeders
+
+-   Generate application key
+
+```
+docker-compose exec feeder_app php artisan key:generate
+```
+
+-   Run the database migrations and seeders
+
 ```
 docker-compose exec feeder_app php artisan migrate
 docker-compose exec feeder_app php artisan db:seed
