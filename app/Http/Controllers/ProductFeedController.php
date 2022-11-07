@@ -43,7 +43,7 @@ class ProductFeedController extends Controller
         $productFeeder = new ProductFeeder($builder, $formatter);
 
         // load products from cache
-        $products = Cache::tags(['products'])->rememberForever('product-feed-' . $request->input('page'), function () {
+        $products = Cache::tags(['products'])->rememberForever('product-feed-' . self::PER_PAGE . '-' . $request->input('page'), function () {
             return $this->repository->paginate(self::PER_PAGE)->getCollection()->toArray();
         });
 
