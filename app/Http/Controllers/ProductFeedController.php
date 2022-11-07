@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\FeedFormats;
-use App\Enums\FeedMerchants;
 use Illuminate\Http\Response;
 use App\Helpers\ResponseHelper;
 use App\Contracts\FeedBuilder;
 use App\Contracts\ProductRepositoryInterface;
-use App\Models\Product;
+use App\Http\Requests\ProductFeedRequest;
 use App\Services\Feeder\Formatters\FeedFormatterBase;
 use App\Services\Feeder\ProductFeeder;
-use Cache;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Cache;
 
 class ProductFeedController extends Controller
 {
@@ -35,12 +32,8 @@ class ProductFeedController extends Controller
      *
      * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
-    public function export(Request $request, string $merchant, string $fileFormat): Response|JsonResponse
+    public function export(ProductFeedRequest $request, string $merchant, string $fileFormat): Response|JsonResponse
     {
-        if ($this->validateRequest($merchant, $fileFormat) == false) {
-            return ResponseHelper::fail(code: Response::HTTP_BAD_REQUEST, message: trans('errors.400'));
-        }
-
         if ($request->has('page') == false)
             return $this->showPages($merchant, $fileFormat);
 
@@ -118,36 +111,5 @@ class ProductFeedController extends Controller
         foreach (config('feeder.builders') as $builder) {
             if ($builder[0]->value == $fileFormat) return new $builder[1];
         }
-    }
-
-    /**
-     * Validate route parameters
-     *
-     * @param string $merchant
-     * @param string $fileFormat
-     * @return bool
-     */
-    private function validateRequest(string $merchant, string $fileFormat)
-    {
-        $merchantFlag = false;
-        $fileFormatFlag = false;
-
-        // check merchant supported
-        foreach (FeedMerchants::cases() as $m) {
-            if ($merchant == $m->value) {
-                $merchantFlag = true;
-                break;
-            }
-        }
-
-        // check file format supported
-        foreach (FeedFormats::cases() as $f) {
-            if ($fileFormat == $f->value) {
-                $fileFormatFlag = true;
-                break;
-            }
-        }
-
-        return $fileFormatFlag && $merchantFlag;
     }
 }
