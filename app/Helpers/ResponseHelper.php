@@ -13,14 +13,9 @@ class ResponseHelper
     private ?array $data = null;
     private bool $success = true;
 
-    public static function instance()
-    {
-        return new ResponseHelper;
-    }
-
     public static function success(int $code, array $data = null, string $message = null)
     {
-        return self::instance()
+        return (new ResponseHelper)
             ->setCode($code)
             ->setMessage($message)
             ->setData($data)
@@ -30,7 +25,7 @@ class ResponseHelper
 
     public static function fail(int $code, array $data = null, string $message = null)
     {
-        return self::instance()
+        return (new ResponseHelper)
             ->setCode($code)
             ->setMessage($message)
             ->setData($data)
@@ -40,7 +35,7 @@ class ResponseHelper
 
     public static function notFound()
     {
-        return self::instance()
+        return (new ResponseHelper)
             ->setCode(Response::HTTP_NOT_FOUND)
             ->setMessage(trans('errors.404'))
             ->setSuccess(false)

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\Feeder\FormatterNotFoundException;
 use Illuminate\Http\Response;
 use App\Helpers\ResponseHelper;
 use App\Contracts\FeedBuilder;
 use App\Contracts\ProductRepositoryInterface;
+use App\Exceptions\Feeder\BuilderNotFoundException;
 use App\Http\Requests\ProductFeedRequest;
 use App\Services\Feeder\Formatters\FeedFormatterBase;
 use App\Services\Feeder\ProductFeeder;
@@ -98,6 +100,8 @@ class ProductFeedController extends Controller
         foreach (config('feeder.formatters') as $formatter) {
             if ($formatter[0]->value == $merchant) return new $formatter[1];
         }
+
+        throw new FormatterNotFoundException();
     }
 
     /**
@@ -111,5 +115,7 @@ class ProductFeedController extends Controller
         foreach (config('feeder.builders') as $builder) {
             if ($builder[0]->value == $fileFormat) return new $builder[1];
         }
+
+        throw new BuilderNotFoundException();
     }
 }

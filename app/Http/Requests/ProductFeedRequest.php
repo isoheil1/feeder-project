@@ -28,7 +28,7 @@ class ProductFeedRequest extends FormRequest
 
     /**
      * Add parameters to be validated
-     * 
+     *
      * @return array
      */
     public function all($keys = null)
